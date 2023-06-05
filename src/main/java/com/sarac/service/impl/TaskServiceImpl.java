@@ -12,6 +12,9 @@ import com.sarac.mapper.UserMapper;
 import com.sarac.repository.TaskRepository;
 import com.sarac.service.TaskService;
 import com.sarac.service.UserService;
+import org.keycloak.adapters.springsecurity.account.SimpleKeycloakAccount;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -118,7 +121,11 @@ public class TaskServiceImpl implements TaskService {
     @Override
     public List<TaskDTO> listAllTasksByStatusIsNot(Status status) {
 
-        UserDTO loggedInUser = userService.findByUserName("john@employee.com");
+        Authentication authentication= SecurityContextHolder.getContext().getAuthentication();
+        SimpleKeycloakAccount details=(SimpleKeycloakAccount) authentication.getDetails();
+        String userName=details.getKeycloakSecurityContext().getToken().getPreferredUsername();
+
+        UserDTO loggedInUser = userService.findByUserName(userName);
 
         List<Task> tasks = taskRepository.
                 findAllByTaskStatusIsNotAndAssignedEmployee(status, userMapper.convertToEntity(loggedInUser));
@@ -128,7 +135,10 @@ public class TaskServiceImpl implements TaskService {
     @Override
     public List<TaskDTO> listAllTasksByStatus(Status status) {
 
-        UserDTO loggedInUser = userService.findByUserName("john@employee.com");
+        Authentication authentication= SecurityContextHolder.getContext().getAuthentication();
+        SimpleKeycloakAccount details=(SimpleKeycloakAccount) authentication.getDetails();
+        String userName=details.getKeycloakSecurityContext().getToken().getPreferredUsername();
+        UserDTO loggedInUser = userService.findByUserName(userName);
 
         List<Task> tasks = taskRepository.
                 findAllByTaskStatusAndAssignedEmployee(status, userMapper.convertToEntity(loggedInUser));
