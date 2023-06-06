@@ -2,6 +2,7 @@ package com.sarac.controller;
 
 import com.sarac.dto.ResponseWrapper;
 import com.sarac.dto.UserDTO;
+import com.sarac.exception.TicketingProjectException;
 import com.sarac.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -62,7 +63,7 @@ public class UserController {
     @DeleteMapping ("/{name}")
     @RolesAllowed("Admin")
     @Operation(summary = "Delete user")
-    public ResponseEntity<ResponseWrapper>DeleteUser(@PathVariable("name")String name){
+    public ResponseEntity<ResponseWrapper>DeleteUser(@PathVariable("name")String name) throws TicketingProjectException {
         userService.delete(name);
         return ResponseEntity.ok(new ResponseWrapper(
                 "User is Deleted", HttpStatus.OK

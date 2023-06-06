@@ -1,9 +1,11 @@
 package com.sarac.service.impl;
 
+import com.sarac.annotation.DefaultExceptionMessage;
 import com.sarac.dto.ProjectDTO;
 import com.sarac.dto.TaskDTO;
 import com.sarac.dto.UserDTO;
 import com.sarac.entity.User;
+import com.sarac.exception.TicketingProjectException;
 import com.sarac.mapper.UserMapper;
 import com.sarac.repository.UserRepository;
 import com.sarac.service.KeycloakService;
@@ -82,7 +84,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void delete(String username) {
+    @DefaultExceptionMessage(defaultMessage = "Failed to delete user")
+    public void delete(String username) throws TicketingProjectException {
 
         User user = userRepository.findByUserNameAndIsDeleted(username, false);
 
@@ -90,6 +93,9 @@ public class UserServiceImpl implements UserService {
             user.setIsDeleted(true);
             user.setUserName(user.getUserName() + "-" + user.getId());  // harold@manager.com-2
             userRepository.save(user);
+        }
+        else{
+            throw new TicketingProjectException("User can not be deleted");
         }
 
     }
