@@ -53,7 +53,7 @@ public class ProjectController {
     public ResponseEntity<ResponseWrapper>updateProject(@RequestBody ProjectDTO dto){
         projectService.update(dto);
         return ResponseEntity.ok(new ResponseWrapper(
-                "Porject is successfully updated",HttpStatus.OK
+                "Project is successfully updated",HttpStatus.OK
         ));
     }
     @DeleteMapping("/{code}")
@@ -62,7 +62,7 @@ public class ProjectController {
     public ResponseEntity<ResponseWrapper>deleteProject(@PathVariable("code")String code){
         projectService.delete(code);
         return ResponseEntity.ok(new ResponseWrapper(
-                "Porject is successfully updated",HttpStatus.OK
+                "Project is successfully deleted",HttpStatus.OK
         ));
     }
     @GetMapping("/manager/project-status")
